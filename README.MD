@@ -74,7 +74,7 @@ mysql请安装5.7版本。
 
 8.启动爬虫服务：
 
-```python run_spider.py```
+```python3 run_spider.py```
 
 后台运行的方法参考第7步，当然，你需要给新创建的screen一个新的标识，比如`kindle_spider`。
 
