@@ -28,7 +28,13 @@ Kindle网文助手，支持从网络上下载网络小说，并推送到kindle�
 
 3.安装依赖环境：
 
+当pip对应于python3时(比如使用anaconda安装的python环境)：
+
 ```pip install -r requirements.txt```
+
+当pip3对应于python3时：
+
+```pip3 install -r requirements.txt```
 
 4.修改`config.py`里的数据库参数和消息队列参数，与你的数据库和消息队列参数一致。
 
