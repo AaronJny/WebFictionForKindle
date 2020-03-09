@@ -35,6 +35,7 @@ Kindle网文助手，支持从网络上下载网络小说，并推送到kindle�
 如果没有安装mysql和rabbitmq，可以通过docker安装，请参考：
 
 https://hub.daocloud.io/repos/fa51c1d6-9dc2-49d9-91ac-4bbfc24a1bda
+
 https://hub.daocloud.io/repos/abd7d091-dc5e-4f20-8267-d17d845c1c36
 
 mysql请安装5.7版本。
