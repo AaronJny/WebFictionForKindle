@@ -3,4 +3,4 @@
 # @Author  : AaronJny
 # @Time    : 2020/02/28
 # @Desc    :
-from .spider import SpiderManager, init_spider_configs
+from .spider import SpiderManager, BaseSpider

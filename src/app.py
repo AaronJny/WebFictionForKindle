@@ -3,12 +3,9 @@
 # @Author  : AaronJny
 # @Time    : 2020/03/01
 # @Desc    :
-import shutil
-import os
 from flask import Flask
 from config import Config
 from models import db
-from spiders import init_spider_configs
 from flask_cors import CORS
 
 cors = CORS()
@@ -19,23 +16,11 @@ def create_app():
     # 使用Config类初始化配置参数
     app.config.from_object(Config)
 
-    # 清空临时文件夹
-    temporary_file_path = app.config.get('TEMPORARY_FILE_PATH')
-    if os.path.exists(temporary_file_path):
-        shutil.rmtree(temporary_file_path)
-    os.mkdir(temporary_file_path)
-
     # 允许跨域请求
     cors.init_app(app)
 
-    # 初始化数据库
+    # 初始化数据库链接
     db.init_app(app)
-    with app.app_context():
-        db.create_all()
-
-    # 初始化爬虫信息到数据库
-    with app.app_context():
-        init_spider_configs()
 
     # 挂载api_v1_blueprint
     from api import api_v1_blueprint
