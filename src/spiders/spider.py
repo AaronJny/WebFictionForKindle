@@ -311,3 +311,19 @@ class SpiderManager:
                 break
             except Exception as e:
                 logger.error(e)
+
+
+def init_spider_configs():
+    """
+    解析爬虫脚本中的全部爬虫类，并将新增的爬虫类信息添加到数据库中
+    """
+    # 先加载全部的爬虫配置信息
+    spider_configs = SpiderConfig.all_spider_configs()
+    spider_cls_names = {spider_config.cls_name for spider_config in spider_configs}
+    # 再将新增爬虫信息加入到数据库中
+    tmp_globals = globals()
+    for key, obj in tmp_globals.items():
+        if 'Spider' in key and key != 'BaseSpider' and issubclass(obj, BaseSpider) and key not in spider_cls_names:
+            spider_config = SpiderConfig(site=obj.site, domain=obj.domain, cls_name=key)
+            db.session.add(spider_config)
+            db.session.commit()
