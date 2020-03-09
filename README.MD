@@ -87,5 +87,5 @@ mysql请安装5.7版本。
 
 # 前端项目
 
-待更新
+[AaronJny/web_fiction_for_kindle_front](https://github.com/AaronJny/web_fiction_for_kindle_front)
 
