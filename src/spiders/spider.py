@@ -142,6 +142,7 @@ class ZwdaSpider(BaseSpider):
             latest_chapter = info_tags[3].find('a').get_text().strip()
             # 小说地址
             origin_url = fiction_div.find('h3').find('a').get('href')
+            origin_url = urljoin('https://{}'.format(self.domain), origin_url)
             # 来源站点上的编号
             origin_id = origin_url.strip('/').split('/')[-1]
             # 创建实例
@@ -327,3 +328,7 @@ def init_spider_configs():
             spider_config = SpiderConfig(site=obj.site, domain=obj.domain, cls_name=key)
             db.session.add(spider_config)
             db.session.commit()
+
+
+if __name__ == '__main__':
+    print(ZwdaSpider().get_chapters('https://www.zwda.com/woshixiongshizaitaiwenjianle/', '我师兄实在太稳健了'))
