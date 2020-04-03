@@ -328,7 +328,3 @@ def init_spider_configs():
             spider_config = SpiderConfig(site=obj.site, domain=obj.domain, cls_name=key)
             db.session.add(spider_config)
             db.session.commit()
-
-
-if __name__ == '__main__':
-    print(ZwdaSpider().get_chapters('https://www.zwda.com/woshixiongshizaitaiwenjianle/', '我师兄实在太稳健了'))
