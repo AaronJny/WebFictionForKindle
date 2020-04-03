@@ -113,7 +113,7 @@ class ZwdaSpider(BaseSpider):
         }
 
         params = (
-            ('keyword', fiction_name),
+            ('q', fiction_name),
         )
 
         response = requests.get('https://{}/search.php'.format(self.domain), headers=headers, params=params, timeout=20)
