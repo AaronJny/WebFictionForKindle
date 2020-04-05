@@ -38,7 +38,7 @@ class BaseSpider:
             encoding: 编码方式
         """
         html = content.decode(encoding, errors='ignore')
-        html = re.sub('<[ ]*br[ ]*/?[ ]*>', '\n\n<br>', html)
+        html = re.sub('<[ ]*br[ ]*/?[ ]*>', '\n<br>', html)
         return html
 
     def search_fictions_by_name(self, fiction_name):
