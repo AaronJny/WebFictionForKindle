@@ -122,7 +122,10 @@ def all_fictions():
     for fiction in fictions:
         fiction_info = fiction.to_dict()
         fiction_info['cached_chapters_number'] = chapters_count_map.get(fiction.fid, 0)
-        cached_percentage = fiction_info['cached_chapters_number'] / fiction.fiction_chapters_total * 100
+        if fiction.fiction_chapters_total == 0:
+            cached_percentage = 100
+        else:
+            cached_percentage = fiction_info['cached_chapters_number'] / fiction.fiction_chapters_total * 100
         fiction_info['cached_percentage'] = round(cached_percentage, 2)
         fiction_infos.append(fiction_info)
     total = Fictions.query.count()
