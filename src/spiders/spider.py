@@ -18,6 +18,13 @@ from models import MiddleChapter, FictionChapters
 from models import db
 from utils import rabbitmq
 
+def retry_exception_log_callback(retry_state):
+    """
+    在使用retry装饰器的方法中捕获异常，并log出异常
+    """
+    logger.error(retry_state.outcome.exception())
+    return []
+
 
 class BaseSpider:
     """
@@ -41,7 +48,8 @@ class BaseSpider:
         html = content.decode(encoding, errors='ignore')
         html = re.sub('<[ ]*br[ ]*/?[ ]*>', '\n<br>', html)
         return html
-
+    
+    @retry(stop = stop_after_attempt(3), wait = wait_fixed(2), retry_error_callback = retry_exception_log_callback)
     def search_fictions_by_name(self, fiction_name):
         """
         通过书名检索相关书籍
@@ -52,16 +60,13 @@ class BaseSpider:
         Returns:
             检索到的小说信息列表
         """
-        try:
-            results = self._search_fictions_by_name(fiction_name)
-        except Exception as e:
-            results = []
-            logger.error(str(e))
+        results = self._search_fictions_by_name(fiction_name)
         return results
 
     def _search_fictions_by_name(self, fiction_name):
         raise NotImplementedError
 
+    @retry(stop = stop_after_attempt(3), wait = wait_fixed(2), retry_error_callback = retry_exception_log_callback)
     def get_chapters(self, fiction_url: str, fiction_name: str):
         """
         解析小说全部章节信息
@@ -70,17 +75,13 @@ class BaseSpider:
             fiction_url: 小说主页地址
             fiction_name: 小说名称
         """
-        try:
-            result = self._get_chapters(fiction_url, fiction_name)
-        except Exception as e:
-            result = []
-            traceback.print_exc()
-            logger.error(e)
+        result = self._get_chapters(fiction_url, fiction_name)
         return result
 
     def _get_chapters(self, fiction_url, fiction_name):
         raise NotImplementedError
 
+    @retry(stop = stop_after_attempt(3), wait = wait_fixed(2), retry_error_callback = retry_exception_log_callback)
     def download_chapter(self, middle_chapter: MiddleChapter):
         """
         根据章节信息，从网络上下载章节内容
@@ -91,14 +92,9 @@ class BaseSpider:
         Returns:
             MiddleChapter
         """
-        try:
-            result = self._download_chapter(middle_chapter)
-        except Exception as e:
-            result = None
-            logger.error(e)
+        result = self._download_chapter(middle_chapter)
         return result
 
-    @retry(stop=stop_after_attempt(3), wait=wait_fixed(2))
     def _download_chapter(self, middle_chapter: MiddleChapter):
         raise NotImplementedError
 
