@@ -299,7 +299,8 @@ class SpiderManager:
         else:
             return []
 
-    def crawl_chapter_content(self, channel, method_frame, header_frame, body):
+    @retry(stop = stop_after_attempt(3), wait = wait_fixed(2), retry_error_callback = retry_exception_log_callback)
+    def _crawl_chapter_content(self, channel, method_frame, header_frame, body):
         # 抓取章节内容
         data = json.loads(body)
         middle_chapter = structure(data, MiddleChapter)
@@ -319,9 +320,12 @@ class SpiderManager:
                 self.session.add(fiction_chapter)
                 self.session.commit()
             except Exception as e:
-                logger.error(e)
                 self.session.rollback()
+                raise e
             logger.info('已缓存章节 {}!'.format(chapter.chapter_name))
+        
+    def crawl_chapter_content(self, channel, method_frame, header_frame, body):
+        self._crawl_chapter_content(channel, method_frame, header_frame, body)
 
     def listen_and_crawl_chapter_contents(self, session):
         """
